@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='tumor.png') }}" alt="Tumor Logo" class="logo" />
+
+        <h1>Brain Tumor Predictor</h1>
+        <form action="/" method="POST" enctype="multipart/form-data" class="upload-form">
+            <div class="file-upload">
+                <input type="file" name="file" id="file" required />
+               
+            </div>
+            <button type="submit" class="upload-btn">Predict Tumor</button>
+        </form>
+
+        {% if tumor_type %}
+        <div class="result-box">
+            <h2>Prediction Result</h2>
+            <p>Tumor Type: <strong>{{ tumor_type }}</strong></p>
+            <p>Confidence: <strong>{{ confidence }}%</strong></p>
+            <div class="image-preview">
+                <img src="{{ url_for('static', filename='uploads/' + filepath) }}" alt="Uploaded MRI Image">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $('#file').change(function() {
+            const filename = $(this).val().replace('C:\\fakepath\\', '');
+            $('label[for="file"]').text(filename);
+        });
+    </script>
+</body>
+</html>

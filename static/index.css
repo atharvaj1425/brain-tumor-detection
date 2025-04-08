@@ -1,0 +1,172 @@
+/* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-image: url('bg.jpg'); /* Background image */
+    background-size: cover; /* Cover the entire body */
+    background-position: center; /* Center the image */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* Prevent vertical scroll */
+}
+
+.container {
+    background-color:#F2EED7; /* White background with more transparency */
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 1s ease-in-out;
+    transition: box-shadow 0.3s ease; /* Transition effect for hover */
+}
+
+.container:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+}
+
+/* Logo Styling */
+.logo {
+    width: 160px; /* Increase the width */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Reduced margin to bring it closer to the title */
+}
+
+h1 {
+    position: relative;
+    bottom: 20px;
+    color: #333;
+    font-size: 2rem;
+    margin: 10px 0 20px; /* Reduced margin-top to move it higher */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease; /* Transition effect on hover */
+}
+
+
+/* Form Styling */
+.upload-form {
+    margin-bottom: 20px;
+}
+
+.file-upload {
+    position: relative;
+    bottom: 20px; /* This can be removed or adjusted based on your layout */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+
+.file-upload input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-upload input[type="file"]:hover {
+    background-color: #ddd;
+}
+
+.file-upload label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 500;
+    color: #666;
+}
+
+.upload-btn {
+    background-color: black;
+    position: relative;
+    right: 7px;
+    color: white;
+    padding: 12px 20px;
+    border:none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Hover effect */
+}
+
+.upload-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Button grows slightly on hover */
+}
+
+/* Result Box Styling */
+.result-box {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    animation: slideUp 1s ease-in-out;
+}
+
+.result-box h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.result-box p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    color: #555;
+}
+
+.result-box strong {
+    color: #007bff;
+}
+
+.image-preview {
+    margin-top: 15px;
+}
+
+.image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease; /* Hover effect */
+}
+
+.image-preview img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Box shadow on hover */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
