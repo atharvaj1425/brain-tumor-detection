@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+  <!-- Dashboard Layout -->
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Medical Dashboard</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="sidebar-item active">🏠 Upload</a>
+        <a href="#" class="sidebar-item">📊 Analytics</a>
+        <a href="#" class="sidebar-item">👥 Patients</a>
+        <a href="#" class="sidebar-item">⚙ Settings</a>
+        <a href="{{ url_for('logout') }}" class="sidebar-item logout">🚪 Logout</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Welcome, {{ session['username'] }}</h1>
+        <button id="exportBtn" class="btn btn-outline">Export Results</button>
+      </header>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tabs-list">
+          <button class="tab active" data-tab="new-scan">📤 New Scan</button>
+          <button class="tab" data-tab="bulk-scan">📤 Bulk Scan</button>
+          <button class="tab" data-tab="history">📜 Scan History</button>
+        </div>
+
+        <!-- New Scan Tab -->
+        <div class="tab-content active" id="new-scan">
+          <div class="container">
+            <img src="{{ url_for('static', filename='tumor.png') }}" alt="Tumor Logo" class="logo" />
+
+            <h1 class="title">Brain Tumor Predictor</h1>
+
+            <!-- Upload Form Card -->
+            <form id="upload-form" enctype="multipart/form-data" class="card upload-card">
+              <h2>Upload MRI Scan</h2>
+              <div class="file-upload">
+                <input type="file" name="file" id="file" required />
+              </div>
+              <button type="submit" class="upload-btn">Predict Tumor</button>
+            </form>
+
+            <!-- Result Card -->
+            <div id="result-box" class="card result-card" style="display:none;">
+              <h2>Prediction Result</h2>
+              <p>Tumor Type: <strong id="tumor-type"></strong></p>
+              <p>Confidence: <strong id="confidence"></strong>%</p>
+              <div class="image-preview">
+                <img id="preview-img" src="" alt="Uploaded MRI Image">
+              </div>
+              <button id="save-result" class="btn-primary">Save this result</button>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Scan History Tab -->
+        <div class="tab-content" id="history">
+          <div>
+            <h2>Previous Scan Results</h2>
+
+            <!-- Search bars -->
+            <div class="search-bar">
+              <input type="text" id="searchFilename" placeholder="Search by Filename">
+              <input type="text" id="searchDate" placeholder="Search by Date (YYYY-MM-DD)">
+              <input type="text" id="searchResult" placeholder="Search by Result">
+            </div>
+
+            <table class="history-table" id="history-table">
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Date</th>
+                  <th>Result</th>
+                  <th>Confidence</th>
+                  <th>Image</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Rows will be added here dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- In tabs-list -->
+
+        <!-- Add after other tab-content blocks -->
+        <div class="tab-content" id="bulk-scan">
+          <div class="container">
+            <h1 class="title">Bulk MRI Scan Upload</h1>
+
+            <form id="bulk-upload-form" enctype="multipart/form-data" class="card upload-card">
+              <h2>Upload Multiple MRI Scans</h2>
+              <div class="file-upload">
+                <input type="file" name="files" id="bulk-files" multiple required />
+              </div>
+              <button type="submit" class="upload-btn">Bulk Predict</button>
+            </form>
+
+            <div id="bulk-result" class="result-card" style="display:none;">
+              <h2>Bulk Prediction Results</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Filename</th>
+                    <th>Prediction</th>
+                    <th>Confidence</th>
+                    <th>Image</th>
+                    <th>Action</th> <!-- New column -->
+                  </tr>
+                </thead>
+                <tbody id="bulk-result-body"></tbody>
+              </table>
+            
+              <!-- Save All Button -->
+              <button id="save-all" class="btn-primary" style="margin-top: 1rem;">Save All Results</button>
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Tab switching logic
+    const tabs = document.querySelectorAll(".tab");
+    const tabContents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => t.classList.remove("active"));
+        tabContents.forEach((content) => content.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+    });
+
+    //fetching history logic
+    const historybtn = document.querySelector('[data-tab="history"]');
+    let historyData = [];
+
+    historybtn.addEventListener("click", () => {
+      fetch("/api/history")
+        .then((res) => res.json())
+        .then((data) => {
+          historyData = data.history;
+          renderHistoryTable(historyData);
+        });
+    });
+
+    function renderHistoryTable(data) {
+      const tableBody = document.getElementById("historyTableBody");
+      tableBody.innerHTML = "";
+
+      data.forEach((record) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${record.image_path}</td>
+          <td>${record.datetime}</td>
+          <td class="result">${record.prediction}</td>
+          <td>${record.confidence}%</td>
+          <td><img src="/static/uploads/${record.image_path}" alt="Image" width="100"></td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Filtering logic
+    const searchFilename = document.getElementById("searchFilename");
+    const searchDate = document.getElementById("searchDate");
+    const searchResult = document.getElementById("searchResult");
+
+    [searchFilename, searchDate, searchResult].forEach((input) => {
+      input.addEventListener("input", filterHistory);
+    });
+
+    function filterHistory() {
+      const filenameVal = searchFilename.value.toLowerCase();
+      const dateVal = searchDate.value;
+      const resultVal = searchResult.value.toLowerCase();
+
+      const filtered = historyData.filter((record) => {
+        const matchesFilename = record.image_path.toLowerCase().includes(filenameVal);
+        const matchesDate = record.datetime.includes(dateVal);
+        const matchesResult = record.prediction.toLowerCase().includes(resultVal);
+        return matchesFilename && matchesDate && matchesResult;
+      });
+
+      renderHistoryTable(filtered);
+    }
+
+    
+    //prediction api calling
+    document.getElementById("upload-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const fileInput = document.getElementById("file");
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    const res = await fetch("/api/predict", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+
+    // Populate result
+    document.getElementById("tumor-type").textContent = data.tumor_type;
+    document.getElementById("confidence").textContent = data.confidence;
+    document.getElementById("preview-img").src = `/static/uploads/${data.filepath}`;
+    document.getElementById("result-box").style.display = "block";
+
+    // Save on click
+    document.getElementById("save-result").onclick = async () => {
+      const saveRes = await fetch("/api/save_result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tumor_type: data.tumor_type,
+          confidence: data.confidence,
+          filepath: data.filepath
+        })
+      });
+
+      const saveData = await saveRes.json();
+      alert(saveData.message);
+    };
+  });
+
+    // Bulk upload logic
+    document.getElementById("bulk-upload-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const files = document.getElementById("bulk-files").files;
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+      }
+
+      const res = await fetch("/api/bulk_predict", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      const tbody = document.getElementById("bulk-result-body");
+      tbody.innerHTML = "";
+
+      if (data.results && data.results.length > 0) {
+        document.getElementById("bulk-result").style.display = "block";
+        data.results.forEach((result, index) => {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td>${result.filename}</td>
+    <td>${result.tumor_type}</td>
+    <td>${result.confidence}%</td>
+    <td><img src="/static/uploads/${result.filepath}" alt="MRI Image" width="100"/></td>
+    <td><button class="save-btn" data-index="${index}">Save Result</button></td>
+  `;
+
+  tbody.appendChild(row);
+});
+
+// Store results globally for Save All use
+window.bulkResults = data.results;
+
+// Attach event listeners for each save button
+document.querySelectorAll(".save-btn").forEach((btn) => {
+  btn.addEventListener("click", async (e) => {
+    const idx = e.target.getAttribute("data-index");
+    const result = window.bulkResults[idx];
+
+    const saveRes = await fetch("/api/save_result", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tumor_type: result.tumor_type,
+        confidence: result.confidence,
+        filepath: result.filepath
+      })
+    });
+
+    const saveData = await saveRes.json();
+    alert(`Saved: ${result.filename} - ${saveData.message}`);
+  });
+});
+document.getElementById("save-all").addEventListener("click", async () => {
+  if (!window.bulkResults || window.bulkResults.length === 0) {
+    alert("No results to save.");
+    return;
+  }
+
+  for (const result of window.bulkResults) {
+    await fetch("/api/save_result", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tumor_type: result.tumor_type,
+        confidence: result.confidence,
+        filepath: result.filepath
+      })
+    });
+  }
+
+  alert("All results saved successfully!");
+});
+
+
+      } else {
+        alert("No results returned.");
+      }
+    });
+  
+    //exporting history
+    document.getElementById("exportBtn").addEventListener("click", function () {
+    fetch("/api/export_results", {
+        method: "GET",
+        credentials: "include"
+    })
+    .then(async response => {
+        const contentType = response.headers.get("content-type");
+
+        if (!response.ok) {
+            if (contentType && contentType.includes("application/json")) {
+                const err = await response.json();
+                throw new Error(err.message);
+            } else {
+                throw new Error("Not authorized. Please log in.");
+            }
+        }
+
+        if (contentType && contentType.includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "prediction_history.xlsx";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } else {
+            throw new Error("Unexpected response. Not a file.");
+        }
+    })
+    .catch(error => {
+        alert("Export failed: " + error.message);
+    });
+});
+
+  </script>
+</body>
+</html>

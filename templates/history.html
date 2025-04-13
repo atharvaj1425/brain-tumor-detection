@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Prediction History</h1>
+        <a href="{{ url_for('index') }}">Back to Prediction</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prediction</th>
+                    <th>Confidence</th>
+                    <th>Date & Time</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in history %}
+                <tr>
+                    <td>{{ record.prediction }}</td>
+                    <td>{{ record.confidence }}%</td>
+                    <td>{{ record.datetime }}</td>
+                    <td>
+                        <img src="{{ url_for('static', filename='uploads/' + record.image_path) }}" alt="Image" width="100">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

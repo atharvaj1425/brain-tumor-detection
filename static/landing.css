@@ -1,0 +1,170 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  h1, h2, h3 {
+    margin: 0;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background: #333;
+    color: #fff;
+    padding: 1rem 0;
+  }
+  
+  .navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar nav a {
+    margin-left: 1rem;
+    color: #fff;
+  }
+  
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #fff;
+    padding: 4rem 0;
+  }
+  
+  .hero-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-text span {
+    color: #ffcc00;
+  }
+  
+  .hero-buttons .btn {
+    margin-right: 1rem;
+  }
+  
+  .hero-image {
+    position: relative;
+  }
+  
+  .hero-image img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .accuracy-badge {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    background: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    background: #4caf50;
+    border-radius: 50%;
+  }
+  
+  /* Features Section */
+  .features {
+    background: #f9f9f9;
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+  
+  .feature-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-card .icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* CTA Section */
+  .cta {
+    background: #333;
+    color: #fff;
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .cta .btn {
+    margin-top: 1rem;
+  }
+  
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background: #6a11cb;
+    color: #fff;
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background: #2575fc;
+  }
+  
+  .btn-outline {
+    background: transparent;
+    color: #6a11cb;
+    border: 2px solid #6a11cb;
+  }
+  
+  .btn-outline:hover {
+    background: #6a11cb;
+    color: #fff;
+  }
+  
+  /* Footer */
+  .footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+  }

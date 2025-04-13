@@ -1,0 +1,105 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="POST">
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container">
+      <h1 class="logo">MRI-SAGE</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/signup">Sign Up</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Login Section -->
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Sign in to your account</h2>
+        <p>Enter your username and password to access the MRI analysis tool</p>
+      </div>
+      <form method="POST" class="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input 
+            type="text" 
+            name="username" 
+            id="username" 
+            placeholder="Enter your username" 
+            required 
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            name="password" 
+            id="password" 
+            placeholder="Enter your password" 
+            required 
+          />
+          <a href="/forgot-password" class="forgot-password">Forgot your password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary" id="login-button">Sign in</button>
+      </form>
+      <div class="login-footer">
+        <p>
+          Don't have an account? 
+          <a href="/signup" class="signup-link">Sign up</a>
+        </p>
+      </div>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul>
+            {% for category, message in messages %}
+              <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 MRI-SAGE. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
