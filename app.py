@@ -224,11 +224,11 @@ def prepare_image(img_path):
     Open an image file, convert to RGB, resize it to the model's expected input,
     normalize pixel values, and add a batch dimension.
     """
-    img = Image.open(img_path).convert('RGB')
-    img = img.resize((224, 224))
-    img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
-    return img_array
+    with Image.open(img_path).convert("RGB") as img:
+        img = img.resize((224, 224))
+        img_array = np.array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)
+        return img_array
 
 
 from datetime import datetime
@@ -320,6 +320,31 @@ def history_api():
 
     return jsonify(history=history)
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load environment variables from .env
+
+genai_api_key = os.getenv("GENAI_API_KEY")
+
+import google.generativeai as genai
+
+genai.configure(api_key=genai_api_key)
+
+from PIL import Image
+gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+def is_brain_mri(image_path):
+    try:
+        with Image.open(image_path).convert("RGB") as img:
+            prompt = "Is this image a brain MRI scan? Answer 'yes' or 'no'."
+            response = gemini_model.generate_content([prompt, img], stream=False)
+            result = response.text.strip().lower()
+            return result.startswith("yes")
+    except Exception as e:
+        print(f"Error verifying MRI with Gemini: {e}")
+        return False
+
+
 #main functionality but an api.
 @app.route("/api/predict", methods=["POST"])
 def predict_api():
@@ -334,21 +359,40 @@ def predict_api():
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
 
-    # Process image
-    img = prepare_image(filepath)
+    # Step 1: Validate the file is a brain MRI
+    if not is_brain_mri(filepath):
+        try:
+            os.remove(filepath)
+        except Exception as e:
+            print(f"Failed to remove file: {e}")
+        return jsonify({"error": "The uploaded image is not a brain MRI scan."}), 400
 
-    # Prediction
-    prediction = model.predict(img)
-    labels = {0: "No Tumor", 1: "Meningioma", 2: "Pituitary", 3: "Glioma"}
-    class_idx = np.argmax(prediction, axis=1)[0]
-    confidence = float(np.max(prediction)) * 100
-    tumor_type = labels.get(class_idx, "Unknown")
+    try:
+        # Step 2: Predict
+        img = prepare_image(filepath)
+        prediction = model.predict(img)
 
-    return jsonify({
-        "tumor_type": tumor_type,
-        "confidence": round(confidence, 2),
-        "filepath": filename
-    })
+        labels = {0: "No Tumor", 1: "Meningioma", 2: "Pituitary", 3: "Glioma"}
+        class_idx = np.argmax(prediction, axis=1)[0]
+        confidence = float(np.max(prediction)) * 100
+        tumor_type = labels.get(class_idx, "Unknown")
+
+        return jsonify({
+            "tumor_type": tumor_type,
+            "confidence": round(confidence, 2),
+            "filepath": filename
+        })
+
+    except Exception as e:
+        print(f"Prediction error: {e}")
+        return jsonify({"error": "Prediction failed"}), 500
+
+    finally:
+        # Step 3: Clean up the uploaded file
+        try:
+            os.remove(filepath)
+        except Exception as e:
+            print(f"File cleanup error: {e}")
 
 
 #bulk scan
@@ -369,7 +413,22 @@ def bulk_predict():
             filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
             file.save(filepath)
 
+            # Check if image is a brain MRI
+            if not is_brain_mri(filepath):
+                results.append({
+                    "filename": filename,
+                    "tumor_type": "Not a Brain MRI",
+                    "confidence": 0,
+                    "filepath": filename
+                })
+                try:
+                    os.remove(filepath)
+                except Exception as e:
+                    print(f"File cleanup error (non-MRI): {e}")
+                continue
+
             try:
+                # Predict tumor type
                 img = prepare_image(filepath)
                 prediction = model.predict(img)
                 labels = {0: "No Tumor", 1: "Meningioma", 2: "Pituitary", 3: "Glioma"}
@@ -385,12 +444,19 @@ def bulk_predict():
                 })
 
             except Exception as e:
+                print(f"Prediction error for {filename}: {e}")
                 results.append({
                     "filename": filename,
-                    "tumor_type": "Error",
+                    "tumor_type": "Prediction Failed",
                     "confidence": 0,
                     "filepath": filename
                 })
+
+            finally:
+                try:
+                    os.remove(filepath)
+                except Exception as e:
+                    print(f"File cleanup error: {e}")
 
     return jsonify({"results": results})
 
@@ -420,6 +486,36 @@ def save_result_api():
     conn.close()
 
     return jsonify({"message": "Result saved successfully."})
+
+#deleting an image from history
+@app.route("/api/delete_history", methods=["POST"])
+def delete_history_entry():
+    if "user_id" not in session:
+        return jsonify({"message": "Unauthorized"}), 401
+
+    data = request.get_json()
+    image_path = data.get("image_path")
+    user_id = session["user_id"]
+
+    if not image_path:
+        return jsonify({"message": "Image path required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "DELETE FROM user_history WHERE user_id = %s AND image_path = %s",
+        (user_id, image_path)
+    )
+    conn.commit()
+    conn.close()
+
+    # Optional: Delete actual file
+    # try:
+    #     os.remove(os.path.join("static", "uploads", image_path))
+    # except FileNotFoundError:
+    #     pass
+
+    return jsonify({"message": f"{image_path} deleted successfully."})
 
 
 import pandas as pd
