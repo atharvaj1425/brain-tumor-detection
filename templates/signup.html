@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container">
+      <h1 class="logo">MRI-SAGE</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Signup Section -->
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Create an account</h2>
+        <p>Register to start using the MRI analysis tool</p>
+      </div>
+      <form method="POST" class="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input 
+            type="text" 
+            name="username" 
+            id="username" 
+            placeholder="Choose a username" 
+            required 
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            name="password" 
+            id="password" 
+            placeholder="Create a password" 
+            required 
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Sign up</button>
+      </form>
+      <div class="login-footer">
+        <p>
+          Already have an account? 
+          <a href="/login" class="signup-link">Login</a>
+        </p>
+      </div>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul>
+            {% for category, message in messages %}
+              <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 MRI-SAGE. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

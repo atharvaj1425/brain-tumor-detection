@@ -13,7 +13,7 @@
         <img src="{{ url_for('static', filename='tumor.png') }}" alt="Tumor Logo" class="logo" />
 
         <h1>Brain Tumor Predictor</h1>
-        <form action="/" method="POST" enctype="multipart/form-data" class="upload-form">
+        <form action="/predict" method="POST" enctype="multipart/form-data" class="upload-form">
             <div class="file-upload">
                 <input type="file" name="file" id="file" required />
                
@@ -31,6 +31,15 @@
             </div>
         </div>
         {% endif %}
+        <form method="POST" action="{{ url_for('save_result') }}">
+            <input type="hidden" name="tumor_type" value="{{ tumor_type }}">
+            <input type="hidden" name="confidence" value="{{ confidence }}">
+            <input type="hidden" name="filepath" value="{{ filepath }}">
+            <button type="submit">Save this result</button>
+        </form>
+        <form method="GET" action="{{ url_for('show_history') }}">
+            <button type="submit">Show History</button>
+        </form>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

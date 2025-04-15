@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain Tumor Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container">
+      <h1 class="logo">MRI-SAGE</h1>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="{{ url_for('login') }}">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Advanced MRI <span>Brain Tumor</span> Detection</h1>
+          <p>Our AI-powered platform provides accurate tumor detection and classification using state-of-the-art deep learning technology.</p>
+          <div class="hero-buttons">
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Get Started</a>
+            <a href="/about" class="btn btn-outline">Learn More</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="/brain-model.png" alt="3D brain model visualization">
+          <div class="accuracy-badge">
+            <div class="status-indicator"></div>
+            <span>99.2% Detection Accuracy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="container">
+      <h2>How Our Technology Works</h2>
+      <p>MRI-SAGE combines neural networks with medical expertise to provide accurate and reliable tumor classification.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="icon">🧠</div>
+          <h3>Advanced Detection</h3>
+          <p>Our AI model accurately classifies brain tumors into multiple categories with high precision.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔒</div>
+          <h3>Secure & Private</h3>
+          <p>Your medical data is fully encrypted and handled with the highest privacy standards.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📊</div>
+          <h3>Detailed Reports</h3>
+          <p>Get comprehensive analysis with confidence scores and visual explanations.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📤</div>
+          <h3>Easy Upload</h3>
+          <p>Simply upload MRI scans and receive instant results from our neural network.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section id="cta" class="cta">
+    <div class="container">
+      <h2>Ready to Get Started?</h2>
+      <p>Create an account to access our brain tumor detection technology and start analyzing MRI scans today.</p>
+      <a href="/signup" class="btn btn-primary">Create Free Account</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 MRI-SAGE. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,279 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+  }
+  
+  h1, h2, p {
+    margin: 0;
+  }
+  
+  /* Dashboard Layout */
+  .dashboard-layout {
+    display: flex;
+    height: 100vh;
+  }
+  
+  /* Sidebar Styles */
+  .sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sidebar-header {
+    padding: 20px;
+    text-align: center;
+    background-color: #34495e;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .sidebar-item {
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #ecf0f1;
+    font-size: 1rem;
+    display: block;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar-item:hover,
+  .sidebar-item.active {
+    background-color: #1abc9c;
+    color: #fff;
+  }
+  
+  .sidebar-item.logout {
+    margin-top: auto;
+    background-color: #e74c3c;
+    text-align: center;
+  }
+  
+  .sidebar-item.logout:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Main Content Styles */
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .dashboard-header .btn-outline {
+    padding: 10px 20px;
+    border: 2px solid #1abc9c;
+    background-color: transparent;
+    color: #1abc9c;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .dashboard-header .btn-outline:hover {
+    background-color: #1abc9c;
+    color: #fff;
+  }
+  
+  /* Tabs Styles */
+  .tabs {
+    margin-top: 20px;
+  }
+  
+  .tabs-list {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    background-color: #f4f4f9;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .tab.active {
+    background-color: #1abc9c;
+    color: #fff;
+    border-bottom: 2px solid #1abc9c;
+  }
+  
+  .tab-content {
+    display: none;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  /* Card Styles */
+  .card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+  }
+  
+  .card p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .card .btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1abc9c;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .card .btn-primary:hover {
+    background-color: #16a085;
+  }
+  
+  /* Embedded Index.html Styles */
+  .container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .logo {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+  }
+  
+  .upload-form {
+    margin-top: 20px;
+  }
+  
+  .file-upload {
+    margin-bottom: 20px;
+  }
+  
+  .file-upload input[type="file"] {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .upload-btn {
+    padding: 10px 20px;
+    background-color: #1abc9c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .upload-btn:hover {
+    background-color: #16a085;
+  }
+  
+  .result-box {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: left;
+  }
+  
+  .result-box h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+  }
+  
+  .result-box p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .image-preview img {
+    max-width: 400px;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .history-table th, .history-table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  .history-table th {
+    background-color: #f0f0f0;
+  }
+  
+  .result {
+    font-weight: bold;
+  }
+  
+  .search-bar {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .search-bar input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
